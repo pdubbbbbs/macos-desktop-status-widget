@@ -10,7 +10,7 @@ A sleek, customizable desktop widget for macOS that displays security and privac
 - **Security Monitoring**: Real-time VPN, Tor, and DNS status indicators
 - **Privacy Level Bar**: Visual representation of current privacy protection
 - **Panic Button**: Emergency privacy protection (visible on hover)
-- **Cyberpunk Styling**: Glowing borders with customizable background
+- **Cyberpunk Styling**: Glowing borders with customizable colors
 - **Auto-positioning**: Stays fixed on main display, never follows windows
 - **Auto-save**: Automatic backup every 5 minutes
 - **Transparent**: Blends seamlessly with desktop wallpaper
@@ -39,9 +39,6 @@ A sleek, customizable desktop widget for macOS that displays security and privac
    ```
 
 ## Customization
-
-### Background Image
-Place your desired background image as `background.jpg` in the same directory as the executable. The widget will automatically use it with 20% opacity.
 
 ### Colors & Styling
 Edit the `LinearGradient` section in the Swift file to customize the glowing border colors:
@@ -87,7 +84,6 @@ The widget uses aggressive positioning logic to:
 
 ### Project Structure
 - `desktop-widget.swift` - Main application code
-- `background.jpg` - Optional background image
 - Auto-generated backups in `/tmp/DesktopWidget-AutoSave/`
 
 ### Key Components

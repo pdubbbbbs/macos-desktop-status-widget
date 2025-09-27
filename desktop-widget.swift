@@ -165,72 +165,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
     
-    func protectBackgroundImage() {
-        let fileManager = FileManager.default
-        let backgroundPath = "./background.jpg"
-        
-        // Check if background image exists
-        guard fileManager.fileExists(atPath: backgroundPath) else {
-            print("⚠️ No background.jpg found")
-            return
-        }
-        
-        do {
-            // Set restrictive permissions (owner read-only, no access for others)
-            let attributes: [FileAttributeKey: Any] = [
-                .posixPermissions: 0o400  // Read-only for owner, no access for group/others
-            ]
-            
-            try fileManager.setAttributes(attributes, ofItemAtPath: backgroundPath)
-            
-            // Get file info to verify integrity
-            let fileAttributes = try fileManager.attributesOfItem(atPath: backgroundPath)
-            let fileSize = fileAttributes[.size] as? Int64 ?? 0
-            let modificationDate = fileAttributes[.modificationDate] as? Date ?? Date()
-            
-            // Store original file info for validation
-            UserDefaults.standard.set(fileSize, forKey: "BackgroundImageSize")
-            UserDefaults.standard.set(modificationDate, forKey: "BackgroundImageDate")
-            
-            print("🔒 Background image protected (size: \(fileSize) bytes)")
-            
-        } catch {
-            print("⚠️ Failed to protect background image: \(error)")
-        }
-    }
-    
-    func validateBackgroundImage() -> Bool {
-        let fileManager = FileManager.default
-        let backgroundPath = "./background.jpg"
-        
-        guard fileManager.fileExists(atPath: backgroundPath) else {
-            print("⚠️ Background image missing!")
-            return false
-        }
-        
-        do {
-            let fileAttributes = try fileManager.attributesOfItem(atPath: backgroundPath)
-            let currentSize = fileAttributes[.size] as? Int64 ?? 0
-            let currentDate = fileAttributes[.modificationDate] as? Date ?? Date()
-            
-            let originalSize = UserDefaults.standard.object(forKey: "BackgroundImageSize") as? Int64 ?? 0
-            let originalDate = UserDefaults.standard.object(forKey: "BackgroundImageDate") as? Date ?? Date()
-            
-            // Check if file has been modified
-            if currentSize != originalSize || currentDate != originalDate {
-                print("🚨 Background image has been tampered with!")
-                print("   Original: \(originalSize) bytes, \(originalDate)")
-                print("   Current:  \(currentSize) bytes, \(currentDate)")
-                return false
-            }
-            
-            return true
-            
-        } catch {
-            print("⚠️ Failed to validate background image: \(error)")
-            return false
-        }
-    }
 }
 
 // MARK: - Widget Content View
@@ -370,6 +304,73 @@ struct WidgetContentView: View {
         // - Clear clipboard
         // - Close sensitive apps
         // - etc.
+    }
+    
+    func protectBackgroundImage() {
+        let fileManager = FileManager.default
+        let backgroundPath = "./background.jpg"
+        
+        // Check if background image exists
+        guard fileManager.fileExists(atPath: backgroundPath) else {
+            print("⚠️ No background.jpg found")
+            return
+        }
+        
+        do {
+            // Set restrictive permissions (owner read-only, no access for others)
+            let attributes: [FileAttributeKey: Any] = [
+                .posixPermissions: 0o400  // Read-only for owner, no access for group/others
+            ]
+            
+            try fileManager.setAttributes(attributes, ofItemAtPath: backgroundPath)
+            
+            // Get file info to verify integrity
+            let fileAttributes = try fileManager.attributesOfItem(atPath: backgroundPath)
+            let fileSize = fileAttributes[.size] as? Int64 ?? 0
+            let modificationDate = fileAttributes[.modificationDate] as? Date ?? Date()
+            
+            // Store original file info for validation
+            UserDefaults.standard.set(fileSize, forKey: "BackgroundImageSize")
+            UserDefaults.standard.set(modificationDate, forKey: "BackgroundImageDate")
+            
+            print("🔒 Background image protected (size: \(fileSize) bytes)")
+            
+        } catch {
+            print("⚠️ Failed to protect background image: \(error)")
+        }
+    }
+    
+    func validateBackgroundImage() -> Bool {
+        let fileManager = FileManager.default
+        let backgroundPath = "./background.jpg"
+        
+        guard fileManager.fileExists(atPath: backgroundPath) else {
+            print("⚠️ Background image missing!")
+            return false
+        }
+        
+        do {
+            let fileAttributes = try fileManager.attributesOfItem(atPath: backgroundPath)
+            let currentSize = fileAttributes[.size] as? Int64 ?? 0
+            let currentDate = fileAttributes[.modificationDate] as? Date ?? Date()
+            
+            let originalSize = UserDefaults.standard.object(forKey: "BackgroundImageSize") as? Int64 ?? 0
+            let originalDate = UserDefaults.standard.object(forKey: "BackgroundImageDate") as? Date ?? Date()
+            
+            // Check if file has been modified
+            if currentSize != originalSize || currentDate != originalDate {
+                print("🚨 Background image has been tampered with!")
+                print("   Original: \(originalSize) bytes, \(originalDate)")
+                print("   Current:  \(currentSize) bytes, \(currentDate)")
+                return false
+            }
+            
+            return true
+            
+        } catch {
+            print("⚠️ Failed to validate background image: \(error)")
+            return false
+        }
     }
 }
 
